@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+        .newForm {
+            display: flex;
+            flex-direction: column;
+            width: 300px;
+            margin: 0 auto;
+        }
+    </style>
+  </head>
+  <body>
+    <form class="newForm">
+      <label for="name">Name:</label>
+      <input type="text" name="name" id="name"><br>
+      <label for="E-mail">E-mail:</label>
+      <input type="email" name="email" id="email" required="true"><br>
+      <label for="password">Password:</label>
+      <input type="password" name="password" id="password" minlength="5"><br>
+      <button type="submit" class="sub">Create New User</button>
+      <h2 class="loader">Loading</h2>
+    </form>  
+    <script>
+        document.querySelector(".loader").style.display = "none";
+        
+      async function createUser(event) {
+        document.querySelector(".loader").style.display = "block";
+        event.preventDefault(); // Prevent form from submitting the default way
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+  
+        let res = await fetch("http://localhost:3000/api/auth/createuser", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: name,
+            email: email,
+            password: password,
+          }),
+        });
+
+        let data = await res.json();
+
+        document.querySelector(".loader").style.display = "none";
+
+        console.log(data);
+        if(!data.authToken){
+            data.errors.forEach((error) => {
+                alert(error.msg);
+            });
+        }
+      }
+      
+      document.querySelector(".newForm").addEventListener("submit", createUser);
+    </script>
+  </body>
+  
+  </body>
+</html>
