@@ -5,22 +5,16 @@ import noteContext from "./../context/notes/noteContext";
 const Note = () => {
   
   useEffect(() => {
-    localStorage.clear()
-    console.log("First")
-    localStorage.setItem("token", token);
-    console.log("local ",localStorage.getItem("token"));
+
+    if(token==="" || !token){
+      setToken(sessionStorage.getItem("token"));
+    }
+    sessionStorage.setItem("token", token);
     fetchNotes();
-    console.log("local2 ",localStorage.getItem("token"));
   }, []);
   useEffect(() => {
-    console.log("Always")
-    if(token===""){
-      console.log("IF")
-      setToken(localStorage.getItem("token"));
-    }
-    localStorage.setItem("token", token);
-    console.log("token", token)
-    console.log("local", localStorage.getItem("token"));
+    
+    sessionStorage.setItem("token", token); 
   })
   
 
@@ -29,6 +23,8 @@ const Note = () => {
   const [noteId, setNoteId] = useState({});
   const [form, setForm] = useState({ title: "", description: "", tag: "" });
   const [exists, setExists] = useState(token?true:false);
+  const [update, setUpdate] = useState(false);
+  const [add, setAdd] = useState(false);
 
   async function fetchNotes() {
     setIsLoading(true);
@@ -51,12 +47,12 @@ const Note = () => {
     }
   }
 
-  useEffect(() => {
-    console.log("Refresh")
-    console.log("refresh local ",localStorage.getItem("token"));
-    fetchNotes();
-    console.log("refresh local2 ",localStorage.getItem("token"));
-  }, [setIsLoading]);
+  // useEffect(() => {
+  //   console.log("Refresh")
+  //   console.log("refresh local ",localStorage.getItem("token"));
+  //   fetchNotes();
+  //   console.log("refresh local2 ",localStorage.getItem("token"));
+  // }, [setIsLoading]);
 
   const handleChange = (e) => {
     // console.log("target:",e.target)
@@ -90,8 +86,10 @@ const Note = () => {
     } catch (error) {
       console.error("Error adding note:", error);
     }
+    setUpdate(false);
   };
   const handleEdit = async (e) => {
+    setUpdate(true);
     setNoteId(e.target.id);
     console.log(noteId);
   };
@@ -125,6 +123,7 @@ const Note = () => {
     }
   };
   const handleAddNote = async (e) => {
+    setAdd(true)
     setForm({title:"", description:"", tag:""})
     let url = "http://localhost:3000/api/notes/addnote";
     const res = await fetch(url, {
@@ -141,9 +140,44 @@ const Note = () => {
     console.log(notes);
     fetchNotes();
     setForm({ title: "", description: "", tag: "" });
+    setTimeout(() => {
+      setUpdate(true);
+    }, 2000);
   };
+  const handleaddclick = (e) => {
+    setAdd(true);
+    setUpdate(false);
+    setForm({ title: "", description: "", tag: "" });
+  }
   return (
     <div className="container">
+      {/* {!token && (
+        <>
+          <h1 className="mx-4">Please Login or Sign up</h1>
+          <Link to="/signup">
+            <button type="button" className="mx-2 btn btn-primary">
+              Sign Up
+            </button>
+          </Link>
+          <Link to="/login">
+            <button type="button" className="mx-2 btn btn-primary">
+              Login
+            </button>
+          </Link>
+        </>
+      )} */}
+      <button
+        type="button"
+        className="btn btn-primary my-4"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+        onClick={handleAddNote}
+      >
+        Add Note
+      </button>
+      <h2>Your Notes</h2>
+      <div className="modal fade" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div className="container">
       {!token && (<>
         <h1 className="mx-4">Please Login or Sign up</h1>
         <Link to="/signup"><button type="button" className="mx-2 btn btn-primary">Sign Up</button></Link>
@@ -151,9 +185,10 @@ const Note = () => {
       </>)}
       <button
         type="button"
-        className="btn btn-primary"
+        className="btn btn-primary my-4"
         data-bs-toggle="modal"
         data-bs-target="#exampleModal"
+        onClick={handleaddclick}
       >
         Add Note
       </button>
@@ -217,9 +252,9 @@ const Note = () => {
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="submit" className="btn btn-primary">
+                {update && (<button type="submit" className="btn btn-primary">
                   Update Note
-                </button>
+                </button>)}
                 <button
                   type="submit"
                   className="btn btn-primary"
@@ -285,7 +320,38 @@ const Note = () => {
           })
         : !isLoading && <h4>No notes available.</h4>}
     </div>
+      </div>
+      <br />
+      {isLoading && <h4>Loading...</h4>}
+      {token !== "" && !isLoading && notes.length > 0 ? (
+        notes.map((note) => (
+          <div key={note._id} className="d-inline-flex p-2">
+            <div className="card" style={{ width: "18rem" }}>
+              <div className="card-body" style={{ height: "18em" }}>
+                <h3 className="card-title">{note.title}</h3>
+                <h5 className="card-subtitle mb-2 text-muted">tag : {note.tag}</h5>
+                <p className="card-text">{note.description.substring(0, 85)}{note.description.length > 87 ? "..." : ""}</p>
+                <p>Added on : {note.date.split("T")[0]}</p>
+                <span>
+                  <button className="mx-2" data-bs-toggle="modal" data-bs-target="#exampleModal" onClick={() => handleEdit(note._id)}>
+                    <i className="edit fa-solid fa-pen-to-square"></i>
+                  </button>
+                </span>
+                <span>
+                  <button className="mx-2" onClick={() => handleDelete(note._id)}>
+                    <i className="clear mx-1 fa-solid fa-trash"></i>
+                  </button>
+                </span>
+              </div>
+            </div>
+          </div>
+        ))
+      ) : (
+        !isLoading && <h4>No notes available.</h4>
+      )}
+    </div>
   );
 };
+
 
 export default Note;

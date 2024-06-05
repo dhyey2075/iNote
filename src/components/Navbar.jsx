@@ -26,7 +26,7 @@ const Navbar = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <ul className="navbar-nav">
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname==="/"?"bg-primary":""}`} aria-current="page" to="/">
+                <Link className={`nav-link ${location.pathname==="/"?"bg-primary":""}`} aria-current="page" to="/home">
                   Home
                 </Link>
               </li>
@@ -37,12 +37,12 @@ const Navbar = () => {
               </li>
               {token==="" && (<>
                 <li className="nav-item">
-                <Link className={`nav-link ${location.pathname==="/logout"?"bg-primary":""}`} to="/signup">
+                <Link className={`nav-link ${location.pathname==="/signup"?"bg-primary":""}`} to="/signup">
                   Sign Up
                 </Link>
               </li>
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname==="/about"?"bg-primary":""}`} to="/login">
+                <Link className={`nav-link ${location.pathname==="/login"?"bg-primary":""}`} to="/login">
                   Login
                 </Link>
               </li>

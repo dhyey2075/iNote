@@ -9,7 +9,7 @@ const Signup = () => {
 
   let navigate = useNavigate();
   let con = useContext(noteContext);
-  localStorage.clear();
+  // localStorage.clear();
   let { token, setToken } = con;
 
   const handleChange = (e) => {
@@ -20,7 +20,6 @@ const Signup = () => {
   };
   useEffect(() => {
     setToken("");
-    localStorage.clear();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -39,8 +38,7 @@ const Signup = () => {
       const json = await res.json();
       console.log(json);
       if (json.authToken) {
-        setToken(json.authToken);
-        console.log(token);
+        setToken(json.authToken);;
         console.log(json.authToken);
         navigate("/login");
       } else if (json.errors) {

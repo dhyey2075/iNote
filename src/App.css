@@ -46,3 +46,58 @@
 :hover:i{
   cursor: pointer;
 }
+
+
+
+.white{
+  color:white;
+}
+
+/* Custom styles for Note component */
+.container {
+  background-image: url('path/to/your/background-image.jpg');
+  background-size: cover;
+  padding: 20px;
+}
+
+.card {
+  margin-bottom: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card-title {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.card-subtitle {
+  font-size: 16px;
+  color: #555;
+}
+
+.card-text {
+  font-size: 18px;
+  color: #333;
+}
+
+.btn {
+  cursor: pointer;
+}
+
+/* Add animation to modal */
+.modal {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

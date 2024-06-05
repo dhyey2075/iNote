@@ -5,11 +5,14 @@ import noteContext from "./../context/notes/noteContext";
 import Note from "./Note";
 
 const Home = () => {
-  localStorage.setItem(
-    "token",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY1NDAyMjQ2ZDFmNDRjMTgwN2YzNjljIn0sImlhdCI6MTcxNjgyODc5M30.yYeFxbJ_lB-5xLTXjIBegiap2BRN0DXIpvTcGoIZxnY"
-  );
   let con = useContext(noteContext);
+  const {token, setToke} = con
+
+  sessionStorage.setItem("token", token);
+  // localStorage.setItem(
+  //   "token",
+  //   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjY1NDAyMjQ2ZDFmNDRjMTgwN2YzNjljIn0sImlhdCI6MTcxNjgyODc5M30.yYeFxbJ_lB-5xLTXjIBegiap2BRN0DXIpvTcGoIZxnY"
+  // );
   let { notes, setNotes } = con;
 
   async function fetchNotes() {
@@ -20,7 +23,7 @@ const Home = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "auth-token": localStorage.getItem("token"),
+            "auth-token": sessionStorage.getItem("token"),
           },
         }
       );
@@ -31,10 +34,10 @@ const Home = () => {
     }
   }
 
-  useEffect(() => {
-    fetchNotes();
+  // useEffect(() => {
+  //   fetchNotes();
 
-  }, [setNotes]);
+  // }, [setNotes]);
 
   useEffect(() => {
     fetchNotes();
@@ -42,7 +45,8 @@ const Home = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar  />
+      {sessionStorage.getItem("token") === null && (<>You have not logged in...Your notes may not be saved</>)}
       <div className="container">
         {/* <h2>Add Notes</h2> */}
         

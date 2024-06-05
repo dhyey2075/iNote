@@ -11,6 +11,7 @@
     "both": "concurrently \"npm run dev\" \"Node ./Backend/index.js\""
   },
   "dependencies": {
+    "@auth0/auth0-react": "^2.2.4",
     "bcryptjs": "^2.4.3",
     "concurrently": "^8.2.2",
     "cors": "^2.8.5",

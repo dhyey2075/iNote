@@ -7,7 +7,7 @@ const Login = () => {
   let navigate = useNavigate();
   let con = useContext(noteContext);
   let { token, setToken } = con
-
+  const [error, setError] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     console.log("name:", name);
@@ -30,9 +30,13 @@ const Login = () => {
       if (json.authToken) {
         setToken(json.authToken);
         console.log(token);
-        navigate("/");
+        navigate("/home");
       }
-      setForm({ title: "", description: "", tag: "" });
+      else{
+          setError(true);
+          setForm({ title: "", description: "", tag: "" });
+          console.log("Invalid Credentials");
+      }
     } catch (error) {
       console.error("Error adding note:", error);
     }
@@ -51,6 +55,7 @@ const Login = () => {
             className="form-control"
             name="name"
             id="exampleInputEmail1"
+
             aria-describedby="emailHelp"
           />
           {/* <div id="emailHelp" className="form-text">
@@ -66,6 +71,7 @@ const Login = () => {
             className="form-control"
             name="email"
             id="exampleInputPassword1"
+
             onChange={handleChange}
           />
         </div>
@@ -78,6 +84,7 @@ const Login = () => {
             className="form-control"
             name="password"
             id="exampleInputPassword1"
+
             onChange={handleChange}
           />
         </div>
@@ -88,6 +95,7 @@ const Login = () => {
         >
           Login
         </button>
+        {error && <h4>Invalid Credentials</h4>}
         <Link to="/signup">
           <h4>not have account? Make by clicking here</h4>
         </Link>
